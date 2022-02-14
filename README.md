@@ -1,9 +1,14 @@
 # berlinExpenditureClassification
 
-The expenditure category is predicted based on the "Zweck" (cause) sentence.
-
 The data was obtained from:
 https://www.berlin.de/sen/finanzen/service/zuwendungsdatenbank/
+
+The expenditure category is predicted based on the "Zweck" (cause) sentence.
+The approach is summarized below.
+
+<p align="center">
+  <img src="https://github.com/gmoharram/berlinExpenditureClassification/blob/main/assets/img/approach.png" />
+</p>
 
 The steps taken are recorded in 4 jupyter notebooks making use of 4 python modules documented at https://github.com/gmoharram/berlinExpenditureClassification/tree/main/docs/_build/html as html files.
 

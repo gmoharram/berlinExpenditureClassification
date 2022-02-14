@@ -1,17 +1,32 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 11 23:54:03 2022
+#import os
+#import sys
+#import inspect
+#currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+#parentdir = os.path.dirname(currentdir)
+#sys.path.insert(0, parentdir) 
 
-@author: gmoha
-"""
 
-import tensorflow as tf
-import numpy as np
-import pandas as pd
+### replace path with local path or use the above if not using jupyter notebooks
+
+import sys
+sys.path.insert(0, "C:\\Users\\gmoha\\OneDrive\\Desktop\\LearningJourney\\Projects\\berlinExpenditureClassification\\src")
+import process
+
 from collections import Counter
 
+import numpy as np
+import pandas as pd
+
+import tensorflow as tf
+import tensorflow_addons as tfa
+
 import sklearn.tree as tree
-from sklearn.model_selection import StratifiedShuffleSplit
+
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer
+
 from sklearn.metrics import f1_score, multilabel_confusion_matrix, recall_score
 
 def top_words(processed_data, k, category = None, return_overlap_ratio = False):
@@ -181,17 +196,85 @@ def create_w2v_lookup(tokenized_data, window_size = 2, negative_samples = 5, emb
     
     return lookup_table
 
-def mean_word_model(mean_model_data, test = True, dim_reduction = False):
+def naive_bayes_bow_model(data, tokenized = False, test = True):
+    """Classify sentence based on naive bayes model on bag-of-words tokenized sentence represenation.
+    
+    Parameters
+    ----------
+    data: DataFrame,
+          Data with 'Zweck' column.
+    tokenized: bool (default: False),
+               If True, 'Zweck' column is assumed to have already been tokenized.
+    test: bool (default: True),
+               If True, 20% of the data will be used for testing.
+               
+    Returns
+    -------
+    nb: sklearn.naive_bayes.MultinomialNB,
+        trained naive bayes classification model.
+    performance: DataFrame (optional: if "test"),
+                 dataframe with classifier performance metrics.
+                 
+    """
+    
+    nb_model_data = data.copy()
+    
+    if not tokenized:
+        nb_model_data = process.tokenize(nb_model_data)
+    
+    nb_model_data['Zweck'] = nb_model_data['Zweck'].apply(lambda x: " ".join(x))
+    
+    if test:
+        train_set, test_set = process.stratified_train_test_split(nb_model_data, test_ratio = .2)
+    
+        X_train, X_test = np.array(train_set['Zweck'].tolist()), np.array(test_set['Zweck'].tolist()) 
+        y_train, y_test = train_set['Politikbereich'], test_set['Politikbereich'] 
+        
+    else:
+        X_train = np.array(nb_model_data['Zweck'].tolist())
+        y_train = nb_model_data['Politikbereich']
+        
+    nb = Pipeline([('vect', CountVectorizer()),
+               ('tfidf', TfidfTransformer()),
+               ('clf', MultinomialNB()),
+              ])
+    nb.fit(X_train, y_train)
+        
+    if not test:
+        return nb
+    
+    else:
+        
+        y_pred = nb.predict(X_test)
+        
+        performance = pd.DataFrame(f1_score(y_test, y_pred, average = None, labels = y_test.unique()), index = y_test.unique(), columns =  ['f1_score'])
+        performance['confusion_matrix_TN_FP_FN_TP'] = multilabel_confusion_matrix(y_test, y_pred, labels = y_test.unique()).tolist()
+        performance['recall_score'] = recall_score(y_test, y_pred, average = None, labels = y_test.unique())
+        
+        return nb, performance
+        
+        
+        
+    
+        
+
+def mean_word_model(data, lookup_table,tokenized = False, transformed = False, test = True, dim_reduction = False):
     """Classify sentence based on mean word embedding with possible dimensionality reduction.
     
     Parameters
     ----------
-    mean_model_data: DataFrame,
-                     Data with mean word vector of 'Zweck' column.
+    data: DataFrame,
+          Data with 'Zweck' column.
+    lookup_table: DataFrame,
+                  Table to look up the word2vector mapping of the corpus vocabulary.
+    tokenized: bool (default: False),
+               If True, 'Zweck' column is assumed to have already been tokenized.
+    transformed: bool (default: False),
+                 If True, 'Zweck' column is assumed to have already beeen vectorized.
     test: bool (default: True),
-               if True, 20% of the data will be used for testing.
+               If True, 20% of the data will be used for testing.
     dim_reduction: bool (default: False),
-                   if True, dimensionality reduction on word embeddings is performed before classification.
+                   If True, dimensionality reduction on word embeddings is performed before classification.
     
     
     Returns
@@ -200,29 +283,27 @@ def mean_word_model(mean_model_data, test = True, dim_reduction = False):
          trained decision tree classification model.
     performance: DataFrame (optional: if "test"),
                  dataframe with classifier performance metrics.
-
-    
+                 
     """
     
-    X = np.array(mean_model_data['mean_word_vector'].tolist())
-    y = mean_model_data['Politikbereich']
+    
+    mean_model_data = process.create_mean_model_data(data, lookup_table, tokenized = tokenized, transformed = transformed)
     
     if test:
-        #train, validation split is performed
-        sss = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=0)
-        for train_index, test_index in sss.split(X, y):
-            X_train, X_test = X[train_index], X[test_index]
-            y_train, y_test = y.iloc[train_index], y.iloc[test_index]
+        train_set, test_set = process.stratified_train_test_split(mean_model_data, test_ratio = .2)
+    
+        X_train, X_test = np.array(train_set['mean_word_vector'].tolist()), np.array(test_set['mean_word_vector'].tolist()) 
+        y_train, y_test = train_set['Politikbereich'], test_set['Politikbereich']
             
         
-        #dimensionality reduction while keeping around 95% of the "energy"
+        #dimensionality reduction while keeping around 90% of the "energy"
         if dim_reduction:
-            d = X.shape[1] #original dimension
-            energy = 100
-            while energy > 95:
+            d = X_train.shape[1] #original dimension
+            S = np.cov(X_train.T)
+            L,U = np.linalg.eig(S)
+            energy = 1
+            while energy > .9 and d > 0:
                 d -= 1
-                S = np.cov(X_train.T)
-                L,U = np.linalg.eig(S)
                 ind = np.argpartition(L, -d)[-d:]
                 energy = sum(L[ind])/sum(L)
             X_train = np.matmul(X_train, U[:, ind])
@@ -241,14 +322,17 @@ def mean_word_model(mean_model_data, test = True, dim_reduction = False):
     
     else:
         
-        #dimensionality reduction while keeping around 95% of the "energy"
+        X= np.array(mean_model_data['mean_word_vector'].tolist())
+        y= mean_model_data['Politikbereich']
+        
+        #dimensionality reduction while keeping around 90% of the "energy"
         if dim_reduction:
             d = X.shape[1] #original dimension
-            energy = 100
-            while energy > 95:
+            S = np.cov(X.T)
+            L,U = np.linalg.eig(S)
+            energy = 1
+            while energy > .9 and d > 0:
                 d -= 1
-                S = np.cov(X.T)
-                L,U = np.linalg.eig(S)
                 ind = np.argpartition(L, -d)[-d:]
                 energy = sum(L[ind])/sum(L)
             X = np.matmul(X, U[:, ind])
@@ -257,6 +341,132 @@ def mean_word_model(mean_model_data, test = True, dim_reduction = False):
         clf.fit(X, y)
         
         return clf
+    
+def plot_performance(performance, score):
+    """ Plot a performance score of the classifier by class and inlcude mean line.
+    
+    Parameters
+    ----------
+    performance: DataFrame,
+                 Dataframe with classes as indices and performance evaluations as columns.
+    score: str,
+           Performance score column to plot.
+    
+    Returns
+    -------
+    performance_plot: AxesSubplot,
+                      Plot of performance scores by class.
+                      
+    """
+    
+    ax = performance.sort_values(by = score, ascending=False).plot.bar(y = score, title = 'Classifier {} by Class'.format(score), figsize = (12,4), fontsize = 14)
+    mean_score = performance[score].mean()
+    ax.annotate('Mean Score: {:.2f}'.format(mean_score), xy=(20, mean_score + 0.03))
+    return ax.axhline(y=mean_score, color='k', linestyle='--', lw=2)
+
+def lstm_model(data, lookup_table, num_units = 200, dropout = 0.3, rec_dropout = 0.0, activation = 'relu', optimizer = 'adam', tokenized = False, transformed = False, test = True):
+    """Classify sentence with lstm model on word embeddings.
+    
+    Parameters
+    ----------
+    data: DataFrame,
+          Data with 'Zweck' column.
+    lookup_table: DataFrame,
+                  Table to look up the word2vector mapping of the corpus vocabulary.
+    num_units: int (default: 200), 
+               Hyperparameter: Dimensionality of LSTM output space.
+    dropout: float (default: 0.3),
+             Hyperparameter: Fraction of the units to drop for the linear transformation of the inputs.
+    rec_dropout: float (default: 0),
+                 Hyperparameter: Fraction of the units to drop for the linear transformation of the recurrent state.
+    activiation: str (default: 'relu'),
+                 Hyperparameter: Activation function to use.
+    optimizer: str (default: 'adam'),
+                 Hyperparameter: Name of optimizer to use.
+    tokenized: bool (default: False),
+               If True, 'Zweck' column is assumed to have already been tokenized.
+    transformed: bool (default: False),
+                 If True, 'Zweck' column is assumed to have already beeen vectorized.
+    test: bool (default: True),
+          If True, 20% of the data will be used for testing.
+    
+    
+    Returns
+    -------
+    model: tf.keras.Model,
+           trained lstm model which takes tensors in the shape (n, padded_sentence_length, embedding_dimension) as input
+           and produces one-hot encoded labels as output.
+    performance: DataFrame (optional: if "test"),
+                 dataframe with model performance metrics.
+
+    """
+    
+    lstm_model_data = process.create_lstm_model_data(data, lookup_table, preembed = False, tokenized = tokenized, transformed = transformed)
+    
+    if test:
+        train_set, test_set = process.stratified_train_test_split(lstm_model_data, test_ratio = .2)
+        
+        input_tensor_test = tf.constant(test_set['padded_sentence'].tolist())
+        labels_test = tf.constant(pd.get_dummies(test_set['Politikbereich']))
+        BATCH_SIZE = 1000
+        BUFFER_SIZE = labels_test.shape[0]
+        dataset_test = tf.data.Dataset.from_tensor_slices((input_tensor_test, labels_test))
+        dataset_test = dataset_test.shuffle(BUFFER_SIZE).batch(BATCH_SIZE, drop_remainder=True)
+        
+    else:
+        
+        train_set = lstm_model_data
+        
+    #prepare input for lstm model
+    input_tensor = tf.constant(train_set['padded_sentence'].tolist())
+    labels = tf.constant(pd.get_dummies(train_set['Politikbereich']))
+    BATCH_SIZE = 1000
+    BUFFER_SIZE = labels.shape[0]
+    dataset = tf.data.Dataset.from_tensor_slices((input_tensor, labels))
+    dataset = dataset.shuffle(BUFFER_SIZE).batch(BATCH_SIZE, drop_remainder=True)
+        
+    #Define model
+    weights = np.array(lookup_table['vector'].tolist())
+    num_classes = train_set['Politikbereich'].unique().size
+
+    model = tf.keras.models.Sequential()
+    model.add(tf.keras.layers.Embedding(input_dim=weights.shape[0],
+              output_dim=weights.shape[1],
+              embeddings_initializer=tf.keras.initializers.Constant(weights),
+              trainable=False,
+              mask_zero=True))
+    model.add(tf.keras.layers.Masking(mask_value=0.0))
+    model.add(tf.keras.layers.LSTM(num_units, return_sequences=False, 
+               dropout=dropout, recurrent_dropout=rec_dropout))
+    model.add(tf.keras.layers.Dense(num_classes, activation=activation)) 
+    
+    if activation == 'softmax':
+        model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalCrossentropy(from_logits=False), metrics=[tf.keras.metrics.CategoricalAccuracy() , tfa.metrics.F1Score(num_classes = num_classes, average = 'macro')])
+    else:
+        model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True), metrics=[tf.keras.metrics.CategoricalAccuracy(), tfa.metrics.F1Score(num_classes = num_classes, average = 'macro')])
         
     
+    #Fit model
+    
+    if test:
+        callbacks = [tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=20)]
+        model.fit(dataset, validation_data=dataset_test, callbacks = callbacks, epochs=1000)
+    else:
+        model.fit(dataset, epochs = 60)
+        
+    if test:
+        prediction = model.predict(input_tensor_test, batch_size=None, verbose=0, steps=None, callbacks=None, max_queue_size=10, workers=1, use_multiprocessing=False)
+        classes = pd.get_dummies(train_set['Politikbereich']).columns
+        y_test = test_set['Politikbereich']
+        y_pred = [classes[x] for x in prediction.argmax(axis=1)]
+        performance = pd.DataFrame(f1_score(y_test, y_pred, average = None, labels = classes), index = classes, columns =  ['f1_score'])
+        performance['confusion_matrix_TN_FP_FN_TP'] = multilabel_confusion_matrix(y_test, y_pred, labels = classes).tolist()
+        performance['recall_score'] = recall_score(y_test, y_pred, average = None, labels = classes)
+    
+        return model, classes, performance
+    
+    else:
+        
+        classes = pd.get_dummies(train_set['Politikbereich']).columns
+        return model, classes
     

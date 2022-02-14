@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 11 23:33:34 2022
-
-@author: gmoha
-"""
-
 import pandas as pd
 from collections import Counter
 
@@ -26,7 +19,7 @@ def class_frequency(data, column = 'Politikbereich'):
     """
     
     cat_dist = data.groupby(column).count().sort_values(by = ['Zweck'], axis = 0, ascending  = False)
-    return cat_dist.plot.bar(figsize = (12, 4), fontsize = 14)
+    return cat_dist.plot.bar(y = 'Zweck', figsize = (12, 4), fontsize = 14)
 
 
 def word_frequency(tokenized_data, category):

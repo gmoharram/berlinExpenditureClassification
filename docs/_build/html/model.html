@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>model module &mdash; BerlinExpenditureClassification  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="predict module" href="predict.html" />
+    <link rel="prev" title="explore module" href="explore.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BerlinExpenditureClassification
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="explore.html">explore module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="predict.html">predict module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="process.html">process module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BerlinExpenditureClassification</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">src</a> &raquo;</li>
+      <li>model module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/model.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-model">
+<span id="model-module"></span><h1>model module<a class="headerlink" href="#module-model" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="model.create_w2v_lookup">
+<span class="sig-prename descclassname"><span class="pre">model.</span></span><span class="sig-name descname"><span class="pre">create_w2v_lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tokenized_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">negative_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.create_w2v_lookup" title="Permalink to this definition"></a></dt>
+<dd><p>Take a corpus of documents and create a word2vector lookup table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tokenized_data</strong> (<em>DataFrame</em><em>,</em>) – Processed training data with processed ‘Zweck’ column.</p></li>
+<li><p><strong>window_size</strong> (<em>int</em><em> (</em><em>default: 2</em><em>)</em><em>,</em>) – Number of words to consider similar to the left and right of the target word.</p></li>
+<li><p><strong>negative_samples</strong> (<em>int</em><em> (</em><em>default: 5</em><em>)</em><em>,</em>) – Number of negative context words to sample.</p></li>
+<li><p><strong>embedding_dim</strong> (<em>int</em><em> (</em><em>default: 128</em><em>)</em><em>,</em>) – Dimension of the real space the words will be embedded in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>lookup_table</strong> – Table to look up the word2vector mapping of the corpus vocabulary.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="model.lstm_model">
+<span class="sig-prename descclassname"><span class="pre">model.</span></span><span class="sig-name descname"><span class="pre">lstm_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rec_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'adam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.lstm_model" title="Permalink to this definition"></a></dt>
+<dd><p>Classify sentence with lstm model on word embeddings.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em><em>,</em>) – Data with ‘Zweck’ column.</p></li>
+<li><p><strong>lookup_table</strong> (<em>DataFrame</em><em>,</em>) – Table to look up the word2vector mapping of the corpus vocabulary.</p></li>
+<li><p><strong>num_units</strong> (<em>int</em><em> (</em><em>default: 200</em><em>)</em><em>,</em>) – Hyperparameter: Dimensionality of LSTM output space.</p></li>
+<li><p><strong>dropout</strong> (<em>float</em><em> (</em><em>default: 0.3</em><em>)</em><em>,</em>) – Hyperparameter: Fraction of the units to drop for the linear transformation of the inputs.</p></li>
+<li><p><strong>rec_dropout</strong> (<em>float</em><em> (</em><em>default: 0</em><em>)</em><em>,</em>) – Hyperparameter: Fraction of the units to drop for the linear transformation of the recurrent state.</p></li>
+<li><p><strong>activiation</strong> (<em>str</em><em> (</em><em>default: 'relu'</em><em>)</em><em>,</em>) – Hyperparameter: Activation function to use.</p></li>
+<li><p><strong>optimizer</strong> (<em>str</em><em> (</em><em>default: 'adam'</em><em>)</em><em>,</em>) – Hyperparameter: Name of optimizer to use.</p></li>
+<li><p><strong>tokenized</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already been tokenized.</p></li>
+<li><p><strong>transformed</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already beeen vectorized.</p></li>
+<li><p><strong>test</strong> (<em>bool</em><em> (</em><em>default: True</em><em>)</em><em>,</em>) – If True, 20% of the data will be used for testing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>model</strong> (<em>tf.keras.Model,</em>) – trained lstm model which takes tensors in the shape (n, padded_sentence_length, embedding_dimension) as input
+and produces one-hot encoded labels as output.</p></li>
+<li><p><strong>performance</strong> (<em>DataFrame (optional: if “test”),</em>) – dataframe with model performance metrics.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="model.mean_word_model">
+<span class="sig-prename descclassname"><span class="pre">model.</span></span><span class="sig-name descname"><span class="pre">mean_word_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.mean_word_model" title="Permalink to this definition"></a></dt>
+<dd><p>Classify sentence based on mean word embedding with possible dimensionality reduction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em><em>,</em>) – Data with ‘Zweck’ column.</p></li>
+<li><p><strong>lookup_table</strong> (<em>DataFrame</em><em>,</em>) – Table to look up the word2vector mapping of the corpus vocabulary.</p></li>
+<li><p><strong>tokenized</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already been tokenized.</p></li>
+<li><p><strong>transformed</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already beeen vectorized.</p></li>
+<li><p><strong>test</strong> (<em>bool</em><em> (</em><em>default: True</em><em>)</em><em>,</em>) – If True, 20% of the data will be used for testing.</p></li>
+<li><p><strong>dim_reduction</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, dimensionality reduction on word embeddings is performed before classification.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>clf</strong> (<em>sklearn.tree,</em>) – trained decision tree classification model.</p></li>
+<li><p><strong>performance</strong> (<em>DataFrame (optional: if “test”),</em>) – dataframe with classifier performance metrics.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="model.naive_bayes_bow_model">
+<span class="sig-prename descclassname"><span class="pre">model.</span></span><span class="sig-name descname"><span class="pre">naive_bayes_bow_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.naive_bayes_bow_model" title="Permalink to this definition"></a></dt>
+<dd><p>Classify sentence based on naive bayes model on bag-of-words tokenized sentence represenation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em><em>,</em>) – Data with ‘Zweck’ column.</p></li>
+<li><p><strong>tokenized</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already been tokenized.</p></li>
+<li><p><strong>test</strong> (<em>bool</em><em> (</em><em>default: True</em><em>)</em><em>,</em>) – If True, 20% of the data will be used for testing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>nb</strong> (<em>sklearn.naive_bayes.MultinomialNB,</em>) – trained naive bayes classification model.</p></li>
+<li><p><strong>performance</strong> (<em>DataFrame (optional: if “test”),</em>) – dataframe with classifier performance metrics.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="model.plot_performance">
+<span class="sig-prename descclassname"><span class="pre">model.</span></span><span class="sig-name descname"><span class="pre">plot_performance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">performance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">score</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.plot_performance" title="Permalink to this definition"></a></dt>
+<dd><p>Plot a performance score of the classifier by class and inlcude mean line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>performance</strong> (<em>DataFrame</em><em>,</em>) – Dataframe with classes as indices and performance evaluations as columns.</p></li>
+<li><p><strong>score</strong> (<em>str</em><em>,</em>) – Performance score column to plot.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>performance_plot</strong> – Plot of performance scores by class.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>AxesSubplot,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="model.top_words">
+<span class="sig-prename descclassname"><span class="pre">model.</span></span><span class="sig-name descname"><span class="pre">top_words</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">processed_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">category</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_overlap_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#model.top_words" title="Permalink to this definition"></a></dt>
+<dd><p>Takes top k words for every class to include in bag-of-words underlying set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>processed_data</strong> (<em>DataFrame</em><em>,</em>) – Processed training data with processed ‘Zweck’ column as list of words.</p></li>
+<li><p><strong>k</strong> (<em>int</em><em>,</em>) – Number of top words to include for each class.</p></li>
+<li><p><strong>category</strong> (<em>str</em><em> (</em><em>default: None</em><em>)</em><em>,</em>) – Category to investigate, defaults to combining the top words of each category.</p></li>
+<li><p><strong>return_overlap_ratio</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – Returns ratio of words in top k of multiple classes if True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>bag_set</strong> (<em>set,</em>) – Underlying set to use for bag-of-words sentence embedding.</p></li>
+<li><p><strong>overlap_ratio</strong> (<em>float (optional),</em>) – Ratio of words in top k of multiple classes.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="explore.html" class="btn btn-neutral float-left" title="explore module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="predict.html" class="btn btn-neutral float-right" title="predict module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Gana.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

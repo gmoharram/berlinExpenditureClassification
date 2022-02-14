@@ -158,7 +158,7 @@ def create_sentence_vector(data, lookup_table, tokenized = False):
     
     return transformed_data
 
-def create_mean_word_vector(data, lookup_table, tokenized = False, transformed = False):
+def create_mean_model_data(data, lookup_table, tokenized = False, transformed = False):
     """Transform sentence to mean of word embeddings based on lookup_table.
     
     Parameters
@@ -189,3 +189,36 @@ def create_mean_word_vector(data, lookup_table, tokenized = False, transformed =
     mean_model_data = mean_model_data.dropna(axis = 0) #if none of the word embeddings were in the sentence
     
     return mean_model_data
+
+def create_lstm_model_data(data, lookup_table, preembed = False,  tokenized = False, transformed = False):
+    """Transform sentence to mean of word embeddings based on lookup_table.
+    
+    Parameters
+    ----------
+    data: DataFrame,
+          Data with 'Zweck' column.
+    lookup_table: DataFrame,
+                  Table to look up the word2vector mapping of the corpus vocabulary.
+    preembed: bool (default: False),
+              If True, padded word index vectors (padded_sentence) will be transformed to list of word embeddings.
+    tokenized: bool (default: False),
+               If True, 'Zweck' column is assumed to have already been tokenized.
+    transformed: bool (default: False),
+                 If True, 'Zweck' column is assumed to have already beeen vectorized.
+    
+    Returns
+    -------
+    mean_model_data: DataFrame,
+                     Data with mean word vector column.
+    
+    """
+    
+    lstm_model_data = data.copy()
+    
+    if not transformed:
+        lstm_model_data = create_sentence_vector(lstm_model_data, lookup_table, tokenized = tokenized)
+    
+    if preembed:
+        lstm_model_data['word_vectors'] = lstm_model_data['padded_sentence'].apply(lambda row: lookup_table.iloc[row]['vector'].tolist())
+    
+    return lstm_model_data

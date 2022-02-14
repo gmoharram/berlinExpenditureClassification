@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>process module &mdash; BerlinExpenditureClassification  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="predict module" href="predict.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> BerlinExpenditureClassification
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="explore.html">explore module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="model.html">model module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="predict.html">predict module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">process module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">BerlinExpenditureClassification</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">src</a> &raquo;</li>
+      <li>process module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/process.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-process">
+<span id="process-module"></span><h1>process module<a class="headerlink" href="#module-process" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="process.create_lstm_model_data">
+<span class="sig-prename descclassname"><span class="pre">process.</span></span><span class="sig-name descname"><span class="pre">create_lstm_model_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preembed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#process.create_lstm_model_data" title="Permalink to this definition"></a></dt>
+<dd><p>Transform sentence to mean of word embeddings based on lookup_table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em><em>,</em>) – Data with ‘Zweck’ column.</p></li>
+<li><p><strong>lookup_table</strong> (<em>DataFrame</em><em>,</em>) – Table to look up the word2vector mapping of the corpus vocabulary.</p></li>
+<li><p><strong>preembed</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, padded word index vectors (padded_sentence) will be transformed to list of word embeddings.</p></li>
+<li><p><strong>tokenized</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already been tokenized.</p></li>
+<li><p><strong>transformed</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already beeen vectorized.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mean_model_data</strong> – Data with mean word vector column.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="process.create_mean_model_data">
+<span class="sig-prename descclassname"><span class="pre">process.</span></span><span class="sig-name descname"><span class="pre">create_mean_model_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#process.create_mean_model_data" title="Permalink to this definition"></a></dt>
+<dd><p>Transform sentence to mean of word embeddings based on lookup_table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em><em>,</em>) – Data with ‘Zweck’ column.</p></li>
+<li><p><strong>lookup_table</strong> (<em>DataFrame</em><em>,</em>) – Table to look up the word2vector mapping of the corpus vocabulary.</p></li>
+<li><p><strong>tokenized</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already been tokenized.</p></li>
+<li><p><strong>transformed</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already beeen vectorized.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mean_model_data</strong> – Data with mean word vector column.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="process.create_sentence_vector">
+<span class="sig-prename descclassname"><span class="pre">process.</span></span><span class="sig-name descname"><span class="pre">create_sentence_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lookup_table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#process.create_sentence_vector" title="Permalink to this definition"></a></dt>
+<dd><p>Turn raw data into sentence vector needed as prediction model input based on vocabulary in lookup_table.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em><em>,</em>) – Data with ‘Zweck’ column.</p></li>
+<li><p><strong>lookup_table</strong> (<em>DataFrame</em><em>,</em>) – Table to look up the word2vector mapping of the corpus vocabulary.</p></li>
+<li><p><strong>tokenized</strong> (<em>bool</em><em> (</em><em>default: False</em><em>)</em><em>,</em>) – If True, ‘Zweck’ column is assumed to have already been tokenized.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>transformed_data</strong> – Transformed data ready to be used as model input.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="process.merge_import_from_xlsx">
+<span class="sig-prename descclassname"><span class="pre">process.</span></span><span class="sig-name descname"><span class="pre">merge_import_from_xlsx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_yr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_yr</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_blueprint</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#process.merge_import_from_xlsx" title="Permalink to this definition"></a></dt>
+<dd><p>Merges and imports yearly data as a pandas dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_yr</strong> (<em>int</em><em>,</em>) – First year of available data.</p></li>
+<li><p><strong>end_yr</strong> (<em>int</em><em>,</em>) – Last year of available data.</p></li>
+<li><p><strong>path_blueprint</strong> (<em>str</em><em>,</em>) – Path of excel sheets where year is replaced with ‘{}’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>raw_data</strong> – Merged and imported data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="process.select_clean_data">
+<span class="sig-prename descclassname"><span class="pre">process.</span></span><span class="sig-name descname"><span class="pre">select_clean_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_instances</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#process.select_clean_data" title="Permalink to this definition"></a></dt>
+<dd><p>Cleans and selects relevant data for classification task</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_data</strong> (<em>DataFrame</em><em>,</em>) – Raw data as imported from excel sheets.</p></li>
+<li><p><strong>min_instances</strong> (<em>int</em><em>,</em>) – Number of minimum instances required to consider class.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>data</strong> – Cleaned data used for classification task.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="process.stratified_train_test_split">
+<span class="sig-prename descclassname"><span class="pre">process.</span></span><span class="sig-name descname"><span class="pre">stratified_train_test_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_state</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#process.stratified_train_test_split" title="Permalink to this definition"></a></dt>
+<dd><p>Splits dataset into train and test via stratified sampling</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>DataFrame</em><em>,</em>) – All available datapoints.</p></li>
+<li><p><strong>test_ratio</strong> (<em>float</em><em> (</em><em>default: .2</em><em>)</em><em>,</em>) – Ratio of dataset to use for testing.</p></li>
+<li><p><strong>random_state</strong> (<em>int</em><em> (</em><em>default: 0</em><em>)</em><em>,</em>) – Seed for random number generator.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>train_data, test_data</strong> – Datapoints for training, Datapoints for testing.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple of DataFrames,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="process.tokenize">
+<span class="sig-prename descclassname"><span class="pre">process.</span></span><span class="sig-name descname"><span class="pre">tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#process.tokenize" title="Permalink to this definition"></a></dt>
+<dd><p>Tokenizes ‘Zweck’ sentence into list of words using the nltk library</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>DataFrame</em><em>,</em>) – Cleaned classification DataFrame with original ‘Zweck’ column.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>tokenized_data</strong> – Cleaned classification DataFrame with tokenized ‘Zweck’ column.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>DataFrame,</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="predict.html" class="btn btn-neutral float-left" title="predict module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Gana.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
